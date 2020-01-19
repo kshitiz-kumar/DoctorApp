@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/suggestionCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/card_main_margin_lr"
+    android:layout_marginTop="@dimen/card_main_margin_tb"
+    android:layout_marginEnd="@dimen/card_main_margin_lr"
+    android:layout_marginBottom="@dimen/card_main_margin_tb"
+    app:cardCornerRadius="@dimen/card_main_corner"
+    app:cardElevation="@dimen/card_main_elevation"
+    app:cardPreventCornerOverlap="false">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/blackprescription"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/symptom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Symptom"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginLeft="10dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:text="Medication :"/>
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/medicationName"
+                android:layout_marginLeft="5dp"
+                android:text="Medication Name"
+                android:textColor="@color/colorPrimaryDark"/>
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/choose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose"
+            android:textAllCaps="true"
+            android:textColor="@color/blueTexture"
+            android:textSize="18sp"
+            android:clickable="true"
+            android:onClick="ChooseFunc"
+            android:textStyle="bold"
+            android:layout_gravity="right"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
