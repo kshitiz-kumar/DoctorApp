@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.sax.StartElementListener;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -28,18 +29,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class prescriptionMain extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+import static com.example.doctorapp.R.color.blueTexture;
 
-    ArrayList<String> matches ;
+public class prescriptionMain extends AppCompatActivity implements View.OnClickListener {
+
+    static ArrayList<String> name, symptom, diagnosis, prescription,followup ;
     List<String> categories;
-    ArrayAdapter<String> dataAdapter;
+    //ArrayAdapter<String> dataAdapter;
 
-
+    private Button proceedbutton;
+    private static ImageView tick;
     private ImageView nameSpinner, symptomSpinner, diagnosisSpinner,prescriptionSpinner,followupSpinner;
-    public CardView nameRecorder, namestopRecorder, symptomRecorder, diagnosisRecorder,
+    static public CardView nameRecorder, namestopRecorder, symptomRecorder, diagnosisRecorder,
             prescriptionRecorder, followupRecorder, symptomstopRecorder,diagnosisstopRecorder,prescriptionstopRecorder,followupstopRecorder;
     EditText editText;
     SpeechRecognizer mSpeechRecognizer;
+
+    private static final int nameFlag = 0;
+    private static final int symptomFlag = 1;
+    private final static int diagnosisFlag = 2;
+    private static final int prescriptionFlag = 3;
+    private static final int followupFlag = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +57,10 @@ public class prescriptionMain extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_prescription_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Create Prescription");
+
+        proceedbutton = (Button) findViewById(R.id.proceedbutton);
+
+        tick = (ImageView) findViewById(R.id.nameTick);
 
         nameSpinner = (ImageView) findViewById(R.id.nameSpinner);
         symptomSpinner = (ImageView) findViewById(R.id.symptomSpinner);
@@ -66,6 +80,7 @@ public class prescriptionMain extends AppCompatActivity implements View.OnClickL
         followupstopRecorder = (CardView) findViewById(R.id.followupViewStopname);
 
         setListener();
+        proceedbutton.setEnabled(true);
 
 //        setSpinner();
 
@@ -130,161 +145,197 @@ public class prescriptionMain extends AppCompatActivity implements View.OnClickL
                 nameRecorder.setVisibility(View.GONE);
                 namestopRecorder.setVisibility(View.VISIBLE);
 
-                recognizeSpeech();
+                tick.setVisibility(View.VISIBLE);
+                startProgramModeActivity(textView.Name_Flag);
                 break;
 
             case R.id.imageViewStopname:
                 namestopRecorder.setVisibility(View.GONE);
                 nameRecorder.setVisibility(View.VISIBLE);
-                mSpeechRecognizer.stopListening();
                 break;
 
             case R.id.imageViewAudiosymptoms:
                 symptomRecorder.setVisibility(View.GONE);
                 symptomstopRecorder.setVisibility(View.VISIBLE);
 
-                recognizeSpeech();
+                startProgramModeActivity(textView.Symptom_Flag);
                 break;
 
             case R.id.imageStopsymptom:
                 symptomstopRecorder.setVisibility(View.GONE);
                 symptomRecorder.setVisibility(View.VISIBLE);
-                mSpeechRecognizer.stopListening();
+
                 break;
 
             case R.id.imageViewAudiodiagnosis:
                 diagnosisRecorder.setVisibility(View.GONE);
                 diagnosisstopRecorder.setVisibility(View.VISIBLE);
 
-                recognizeSpeech();
+                startProgramModeActivity(textView.Diagnosis_Flag);
                 break;
 
             case R.id.diagnosisViewStopname:
                 diagnosisstopRecorder.setVisibility(View.GONE);
                 diagnosisRecorder.setVisibility(View.VISIBLE);
-                mSpeechRecognizer.stopListening();
                 break;
 
             case R.id.imageViewAudioprescription:
                 prescriptionRecorder.setVisibility(View.GONE);
                 prescriptionstopRecorder.setVisibility(View.VISIBLE);
 
-                recognizeSpeech();
+                startProgramModeActivity(textView.Prescription_Flag);
                 break;
 
             case R.id.prescriptionViewStopname:
                 prescriptionstopRecorder.setVisibility(View.GONE);
                 prescriptionRecorder.setVisibility(View.VISIBLE);
-                mSpeechRecognizer.stopListening();
                 break;
 
             case R.id.imageViewAudiofollowup:
                 followupRecorder.setVisibility(View.GONE);
                 followupstopRecorder.setVisibility(View.VISIBLE);
 
-                recognizeSpeech();
+                startProgramModeActivity(textView.Followup_Flag);
                 break;
 
             case R.id.followupViewStopname:
                 followupstopRecorder.setVisibility(View.GONE);
                 followupRecorder.setVisibility(View.VISIBLE);
-                mSpeechRecognizer.stopListening();
                 break;
         }
 
     }
 
-    private void recognizeSpeech() {
+    private void startProgramModeActivity(String mode) {
 
-        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        Intent intent = new Intent(this, ProgramModeActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(ProgramModeActivity.INTENT_KEY_PROGRAM_MODE, mode);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
+    public void buttonClick(View view) {
 
-        final Intent mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
-                Locale.getDefault());
+        Intent intent = new Intent(this,PatientList.class);
+        startActivity(intent);
+    }
 
-        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-
-
-        mSpeechRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle bundle) {
-
-            }
-
-            @Override
-            public void onBeginningOfSpeech() {
-
-            }
-
-            @Override
-            public void onRmsChanged(float v) {
-
-            }
-
-            @Override
-            public void onBufferReceived(byte[] bytes) {
-
-            }
-
-            @Override
-            public void onEndOfSpeech() {
-                
-                namestopRecorder.setVisibility(View.GONE);
-                nameRecorder.setVisibility(View.VISIBLE);
-
-                symptomstopRecorder.setVisibility(View.GONE);
-                symptomRecorder.setVisibility(View.VISIBLE);
-
-                diagnosisstopRecorder.setVisibility(View.GONE);
-                diagnosisRecorder.setVisibility(View.VISIBLE);
-
-                prescriptionstopRecorder.setVisibility(View.GONE);
-                prescriptionRecorder.setVisibility(View.VISIBLE);
-
-                followupstopRecorder.setVisibility(View.GONE);
-                followupRecorder.setVisibility(View.VISIBLE);
-
-            }
-
-            @Override
-            public void onError(int i) {
-
-            }
-
-            @Override
-            public void onResults(Bundle bundle) {
-                matches = bundle
-                        .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-
-//                if (matches != null)
-//                    editText.setText(matches.get(0));
+//    private void recognizeSpeech(final int Flag) {
 //
-            }
+//        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+//
+//
+//        final Intent mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+//                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
+//                Locale.getDefault());
+//
+//        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+//
+//
+//        mSpeechRecognizer.setRecognitionListener(new RecognitionListener() {
+//            @Override
+//            public void onReadyForSpeech(Bundle bundle) {
+//
+//            }
+//
+//            @Override
+//            public void onBeginningOfSpeech() {
+//
+//            }
+//
+//            @Override
+//            public void onRmsChanged(float v) {
+//
+//            }
+//
+//            @Override
+//            public void onBufferReceived(byte[] bytes) {
+//
+//            }
+//
+//            @Override
+//            public void onEndOfSpeech() {
+//
+//                namestopRecorder.setVisibility(View.GONE);
+//                nameRecorder.setVisibility(View.VISIBLE);
+//
+//                symptomstopRecorder.setVisibility(View.GONE);
+//                symptomRecorder.setVisibility(View.VISIBLE);
+//
+//                diagnosisstopRecorder.setVisibility(View.GONE);
+//                diagnosisRecorder.setVisibility(View.VISIBLE);
+//
+//                prescriptionstopRecorder.setVisibility(View.GONE);
+//                prescriptionRecorder.setVisibility(View.VISIBLE);
+//
+//                followupstopRecorder.setVisibility(View.GONE);
+//                followupRecorder.setVisibility(View.VISIBLE);
+//
+//            }
+//
+//            @Override
+//            public void onError(int i) {
+//
+//            }
+//
+//            @Override
+//            public void onResults(Bundle bundle) {
+//
+//                switch (Flag){
+//
+//                    case nameFlag:
+//                        name = bundle
+//                            .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//                        name = bundle
+//                                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//                        break;
+//
+//                    case symptomFlag:
+//                        symptom = bundle
+//                                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//                        symptom = bundle
+//                                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//
+//                    case diagnosisFlag:
+//                        diagnosis = bundle
+//                                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//                        diagnosis = bundle
+//                                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//
+//                    case prescriptionFlag:
+//                        prescription = bundle
+//                                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//                        prescription = bundle
+//                                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//
+//                    case followupFlag:
+//                        followup = bundle
+//                                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//                        followup = bundle
+//                                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//
+//
+//                }
+//
+////                if (matches != null)
+////                    editText.setText(matches.get(0));
+////
+//            }
+//
+//            @Override
+//            public void onPartialResults(Bundle bundle) {
+//
+//            }
+//
+//            @Override
+//            public void onEvent(int i, Bundle bundle) {
+//
+//            }
+//        });
 
-            @Override
-            public void onPartialResults(Bundle bundle) {
+//    }
 
-            }
-
-            @Override
-            public void onEvent(int i, Bundle bundle) {
-
-            }
-        });
-
-    }
-
-
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 }

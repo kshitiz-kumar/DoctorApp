@@ -29,6 +29,15 @@
             android:textColor="@color/black"
             android:textSize="15sp" />
 
+        <ImageView
+            android:id="@+id/nameTick"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/tick"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="100dp"/>
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/imageViewAudioname"
@@ -96,57 +105,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <LinearLayout
-            android:id="@+id/recordingname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:translationZ="4dp">
 
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="100dp">
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="#ffffff" />
-
-                <ImageView
-                    android:id="@+id/imageViewMicname"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="12dp"
-                    android:paddingBottom="2dp"
-                    android:src="@drawable/mic_ic"
-                    android:tint="@android:color/holo_red_light"
-                    android:visibility="gone" />
-
-
-                <TextView
-                    android:id="@+id/textViewTimename"
-                    android:layout_width="wrap_content"
-                    android:layout_height="56dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginLeft="32dp"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="0:00"
-                    android:textSize="20sp"
-                    android:textStyle="normal"
-                    android:visibility="gone" />
-
-            </FrameLayout>
-        </LinearLayout>
     </androidx.cardview.widget.CardView>
 </FrameLayout>
